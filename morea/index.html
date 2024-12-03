@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morea's advent calendar</title>
+  <style>
+    :root {
+      --primary-color: #d63447;
+      --secondary-color: #ffffff;
+      --background-color: #f4f4f4;
+      --text-color: #333;
+      --blur-intensity: 5px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      perspective: 1000px;
+    }
+
+    .day {
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
+      border-radius: 15px;
+      aspect-ratio: 1/1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .day:hover {
+      transform: scale(1.05) rotateY(10deg);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+    }
+
+    .day-number {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    .day-link {
+      text-decoration: none;
+      color: inherit;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .day-word {
+      font-size: 0.9rem;
+      text-align: center;
+      user-select: none;
+      transition: filter 0.3s ease;
+      padding: 0 10px;
+    }
+
+    .day.locked {
+      background-color: #888;
+    }
+
+    .day.locked .day-word {
+      filter: blur(var(--blur-intensity)) grayscale(100%);
+      opacity: 0.5;
+    }
+
+    .day.unlocked .day-word {
+      filter: none;
+    }
+
+    @media (max-width: 600px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .calendar {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .day-number {
+        font-size: 1rem;
+      }
+
+      .day-word {
+        font-size: 0.7rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .calendar {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="title">Morea's advent calendar</h1>
+  <div class="calendar" id="calendar"></div>
+</div>
+
+<script>
+  // Tableau des données à remplacer par votre array réel
+  const data = [
+    "grateful",
+    "so far, yet so close",
+    "pensées"
+  ];
+
+  function initCalendar() {
+    const calendar = document.getElementById('calendar');
+
+    // Crée 24 cases pour le calendrier
+    for (let i = 1; i <= 24; i++) {
+      const dayElement = document.createElement('div');
+      dayElement.classList.add('day');
+
+      const dayNumber = document.createElement('div');
+      dayNumber.classList.add('day-number');
+      dayNumber.textContent = i;
+      dayElement.appendChild(dayNumber);
+
+      const dayLink = document.createElement('a');
+      dayLink.classList.add('day-link');
+
+      const wordElement = document.createElement('div');
+      wordElement.classList.add('day-word');
+
+      // Vérifier si le jour est débloqué en fonction de data
+      if (i <= data.length) {
+        // Jour débloqué
+        dayElement.classList.add('unlocked');
+        dayLink.href = `./${data[i-1]}/main.html`;
+        wordElement.textContent = data[i-1];
+      } else {
+        // Jour verrouillé
+        dayElement.classList.add('locked');
+        wordElement.textContent = 'Verrouillé';
+      }
+
+      dayLink.appendChild(wordElement);
+      dayElement.appendChild(dayLink);
+      calendar.appendChild(dayElement);
+    }
+  }
+
+  initCalendar();
+</script>
+</body>
+</html>
